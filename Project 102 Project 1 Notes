@@ -1,0 +1,27 @@
+Project 102 Project 1 Notes
+
+Functionality
+	No multiple wrong guesses
+	Switch to all gui (no screen keyboard)
+	Show correct answer at the bottom
+		Make missed letters show as red
+	Ignore case
+	Hints 
+	Menu 
+		Choose Difficultiy
+	Difficulty
+		Select from scored list
+		Link a difficulty score with each word
+			Length
+			Letter Frequency
+	GUI
+		Stand Constant
+		Add a background
+
+Art
+	Background
+	Clean up the existing drawing
+		Change the stand
+	Man
+		Face should change from alive to dead
+		Add more parts
