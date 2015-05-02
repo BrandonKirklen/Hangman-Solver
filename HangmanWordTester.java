@@ -6,7 +6,7 @@ public class HangmanWordTester {
     public static void main(String[] args)
     {
         HangmanWordChoice currentDictionary =
-                new HangmanWordChoice("C:/Users/Brandon/AeroFS/College/CPE 102/Hangman/wordlist.txt");
+                new HangmanWordChoice("wordlist.txt");
         System.out.println(currentDictionary.newWord(6));
     }
 }
