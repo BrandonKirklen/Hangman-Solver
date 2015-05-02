@@ -44,11 +44,20 @@ public class HangmanWordChoice {
     public String newWord(int difficulty)
     {
         int i;
+        int loopCount=0;
         do {
             i = pickANumber.nextInt(hangmanWordArrayList.size()+1);
+            loopCount++;
         }
-        while ( hangmanWordArrayList.get(i).getDifficulty() != difficulty );
-        return hangmanWordArrayList.get(i).getWord();
+        while ( hangmanWordArrayList.get(i).getDifficulty() != difficulty && loopCount < hangmanWordArrayList.size());
+        if (loopCount < hangmanWordArrayList.size())
+        {
+            log("Invalid Input: difficulty");
+            return null;
+        }
+        else {
+            return hangmanWordArrayList.get(i).getWord();
+        }
     }
 
     public int wordDifficulty(String testWord)
