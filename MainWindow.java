@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
@@ -30,6 +31,25 @@ public class MainWindow extends JFrame {
 		final JLabel wrong = new JLabel("Wrong guesses so far: "+wrongGuesses);
 		final JLabel visibleLabel = new JLabel(visible, SwingConstants.CENTER);
 		final JTextField input = new JTextField();
+		final JMenuBar menubar = new JMenuBar();
+
+		////////////////////////////////MENU BAR STUFF/////////////////////////
+		JMenu file = new JMenu("File");
+
+		JMenuItem eMenuItem = new JMenuItem("Exit");
+		eMenuItem.setMnemonic(KeyEvent.VK_E);
+		eMenuItem.setToolTipText("Exit application");
+		eMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				System.exit(0);
+			}
+		});
+
+		file.add(eMenuItem);
+
+		menubar.add(file);
+		///////////////////////////////////////////////////////////
 		
 		JPanel southPanel = new JPanel(new GridLayout(4, 1));
 		southPanel.add(status);
@@ -38,6 +58,8 @@ public class MainWindow extends JFrame {
 		southPanel.add(wrong);
 		
 		corePanel.add(southPanel, BorderLayout.SOUTH);
+
+		setJMenuBar(menubar);
 		
 		final HangmanFigure hf = new HangmanFigure();
 		corePanel.add(hf, BorderLayout.CENTER);
@@ -51,7 +73,7 @@ public class MainWindow extends JFrame {
 				
 				String text = input.getText().toLowerCase();
 				
-				if(text.length()  == 1 && text.matches("[a-z]")) {
+				if(text.length()  == 1 && text.matches("[a-z]") && !(wrongGuesses.contains(text))) {
 					
 					boolean guessFound = false;
 					
