@@ -3,11 +3,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 public class MainWindow extends JFrame {
 	
@@ -33,7 +29,7 @@ public class MainWindow extends JFrame {
 		final JLabel status = new JLabel("You have "+remainingGuesses+" remaining", SwingConstants.CENTER);
 		final JLabel wrong = new JLabel("Wrong guesses so far: "+wrongGuesses);
 		final JLabel visibleLabel = new JLabel(visible, SwingConstants.CENTER);
-		final JTextField input = new JTextField(); 
+		final JTextField input = new JTextField();
 		
 		JPanel southPanel = new JPanel(new GridLayout(4, 1));
 		southPanel.add(status);
@@ -53,7 +49,7 @@ public class MainWindow extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				String text = input.getText();
+				String text = input.getText().toLowerCase();
 				
 				if(text.length()  == 1 && text.matches("[a-z]")) {
 					
