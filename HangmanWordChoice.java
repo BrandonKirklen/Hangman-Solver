@@ -5,14 +5,13 @@
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class HangmanWordChoice {
@@ -65,7 +64,62 @@ public class HangmanWordChoice {
         return testWord.length();
     }
 
-    private static void log(Object error){
+    private static void log(Object error)
+    {
         System.out.println(String.valueOf(error));
+    }
+
+    public Map sortedList(char guess, ArrayList<HangmanWord> wordArray)
+    {
+
+        Map<Integer, ArrayList<String>> wordListContainingGuess = new HashMap<>();
+        int sum=0;
+        for( int i=0; i < wordArray.size(); i++)
+        {
+            for (int j=0; j < wordArray.get(i).getWord().length(); j++)
+            {
+                if ( wordArray.get(i).getWord().charAt(j) == guess)
+                {
+                    sum += 1 << j;
+                }
+            }
+            if (wordListContainingGuess.get(sum) == null)
+            {
+                wordListContainingGuess.put(sum, new ArrayList<>());
+            }
+            wordListContainingGuess.get(sum).add(wordArray.get(i).getWord());
+            sum=0;
+        }
+        return wordListContainingGuess;
+    }
+
+    public int priceOfGuess(char guess, ArrayList<HangmanWord> wordArray)
+    {
+        int numberWithoutGuess=0;
+        for ( int i=0; i < wordArray.size(); i++)
+        {
+            for (int j=0; j < wordArray.get(i).getWord().length(); j++)
+            {
+                if( wordArray.get(i).getWord().charAt(j) == guess )
+                {
+                    numberWithoutGuess++;
+                    j++;
+                }
+            }
+        }
+        return wordArray.size()-numberWithoutGuess;
+    }
+    int wrong=0;
+    public ArrayList wordGuesses(ArrayList<HangmanWord> wordArray, String letters)
+    {
+        if ( wordArray.size() == 1)
+        {
+            return wordArray;
+        }
+        else
+        {
+
+        }
+        return wordArray;
     }
 }

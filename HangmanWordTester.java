@@ -7,6 +7,11 @@ public class HangmanWordTester {
     {
         HangmanWordChoice currentDictionary =
                 new HangmanWordChoice("wordlist.txt");
-        System.out.println(currentDictionary.newWord(6));
+        System.out.println(currentDictionary.newWord(11));
+        System.out.println("Word 11 char long");
+        System.out.println(currentDictionary.sortedList('z', currentDictionary.hangmanWordArrayList).get(96));
+        System.out.println("Expected: terrazzo");
+        System.out.println(currentDictionary.priceOfGuess('e', currentDictionary.hangmanWordArrayList));
+        System.out.println("Expected: 3307");
     }
 }
