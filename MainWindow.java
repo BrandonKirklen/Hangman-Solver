@@ -18,6 +18,7 @@ public class MainWindow extends JFrame {
 	private String visible;
 
 	public MainWindow() {
+		super("Hangman!"); //give frame a title
 		diff = 1;
 		final int startingGuesses = 10;
 		remainingGuesses = startingGuesses;
@@ -33,6 +34,9 @@ public class MainWindow extends JFrame {
 
 		JPanel corePanel = new JPanel();
 		corePanel.setLayout(new BorderLayout());
+		//set background color
+		corePanel.setOpaque(true);
+		corePanel.setBackground(new Color(0,200,120));
 		
 		final JLabel status = new JLabel("You have "+remainingGuesses+" guesses remaining", SwingConstants.CENTER);
 		final JLabel wrong = new JLabel("Wrong guesses so far: "+wrongGuesses);
