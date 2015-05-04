@@ -32,7 +32,7 @@ public class HangmanFigure extends JPanel {
 		//set color to black
 		g2.setColor(Color.BLACK);
 		//set background color to blue-green
-		g2.setBackground(new Color(0,200,120));
+		g2.setBackground(new Color(126,200, 47));
 
 		// first guess
 		if(guesses > 0) {
