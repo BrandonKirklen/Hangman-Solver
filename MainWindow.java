@@ -3,6 +3,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.*;
 
@@ -55,6 +57,8 @@ public class MainWindow extends JFrame {
 			}
 		});
 
+		JMenuItem hMenuItem = new JMenuItem("Hint");
+
 		JMenuItem nMenuItem = new JMenuItem("New Game");
 		nMenuItem.setMnemonic(KeyEvent.VK_N);
 		nMenuItem.setToolTipText("Start A New Game");
@@ -71,20 +75,60 @@ public class MainWindow extends JFrame {
 				for (int i = 0; i < word.length(); ++i) {
 					visible += "_ ";
 				}
+				hMenuItem.setEnabled(true);
 				visibleLabel.setText(visible);
 				hf.set(0);
+				input.setText("");
+				input.setEnabled(true);
 			}
 		});
 
-		JMenuItem hMenuItem = new JMenuItem("Hint");
 		hMenuItem.setMnemonic(KeyEvent.VK_H);
 		hMenuItem.setToolTipText("Get a Hint");
 		hMenuItem.addActionListener(new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent event) { //needs to give them a letter
-				remainingGuesses -= 2;
+			public void actionPerformed(ActionEvent event) {
+				remainingGuesses -= 3;
+				if (remainingGuesses <= 3) {
+					hMenuItem.setEnabled(false);
+				}
 				status.setText("You have " + remainingGuesses + " guesses remaining");
 				hf.set(startingGuesses - remainingGuesses);
+
+				String actualVisible = "";
+				for(int i = 0; i < visible.length(); i+=2) {
+					actualVisible += visible.charAt(i);
+				}
+				ArrayList<Integer> indexes = new ArrayList<Integer>();
+				for(int i = 0; i < actualVisible.length(); i++) {
+					if (("_").equals(actualVisible.charAt(i) + "")) {
+					    indexes.add(i);
+					}
+				}
+				Random rnd = new Random();
+				int choice = rnd.nextInt(indexes.size());
+				String letter = "" + word.charAt(indexes.get(choice));
+
+				for (int i = 0; i < word.length(); ++i) { //look through word for guessed character
+					if (letter.charAt(0) == word.charAt(i)) {
+
+						String newVisible = "";
+						for (int j = 0; j < visible.length(); ++j) { //update word
+							if (j == (i * 2)) {
+								newVisible += word.charAt(i);
+							} else {
+								newVisible += visible.charAt(j);
+							}
+						}
+						visible = newVisible;
+						visibleLabel.setText(visible);
+					}
+				}
+
+				uniqueLettersRemaining--;
+				if (uniqueLettersRemaining <= 2) {
+					hMenuItem.setEnabled(false);
+				}
 			}
 		});
 
@@ -187,7 +231,11 @@ public class MainWindow extends JFrame {
 					}
 
 					if (!guessFound) { //they guessed wrong
-						if (--remainingGuesses >= 0) { //reduce 1 from guesses, if they didn't lose do this
+						if (--remainingGuesses <= 3) {
+							hMenuItem.setEnabled(false);
+						}
+
+						if (remainingGuesses >= 0) { //reduce 1 from guesses, if they didn't lose do this
 							status.setText("You have " + remainingGuesses + " guesses remaining");
 							wrongGuesses += text + " ";
 							wrong.setText("Wrong guesses so far: " + wrongGuesses);
@@ -211,6 +259,8 @@ public class MainWindow extends JFrame {
 						if (--uniqueLettersRemaining == 0) {
 							status.setText("Congratulations, you have won!");
 							input.setEnabled(false);
+						} else if (uniqueLettersRemaining <= 2) {
+							hMenuItem.setEnabled(false);
 						}
 					}
 
