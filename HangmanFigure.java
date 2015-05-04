@@ -40,8 +40,8 @@ public class HangmanFigure extends JPanel {
 			g2.drawLine(1, 299, 299, 299);
 	
 			//draws gallows
-			g2.drawRect(10, 10, 15, 299);
-			g2.drawRect(10, 10, 160, 15);
+			g2.fillRect(10, 10, 15, 299);
+			g2.fillRect(10, 10, 160, 15);
 			g2.rotate(-Math.PI/4);
 			g2.fillRect(-35,50,70,15);
 			g2.rotate(Math.PI/4);
@@ -115,8 +115,8 @@ public class HangmanFigure extends JPanel {
 			g2.drawLine(1, 299, 299, 299);
 	
 			//re-draws gallows
-			g2.drawRect(10, 10, 15, 299);
-			g2.drawRect(10, 10, 160, 15);
+			g2.fillRect(10, 10, 15, 299);
+			g2.fillRect(10, 10, 160, 15);
 			g2.rotate(-Math.PI/4);
 			g2.fillRect(-35,50,70,15);
 			g2.rotate(Math.PI/4);

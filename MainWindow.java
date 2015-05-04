@@ -35,8 +35,8 @@ public class MainWindow extends JFrame {
 		corePanel.setLayout(new BorderLayout());
 		//set background color
 		corePanel.setOpaque(true);
-		corePanel.setBackground(new Color(0, 200, 120));
-		this.setBackground(new Color(0, 200, 120));
+		corePanel.setBackground(new Color(126,200, 47));
+		this.setBackground(new Color(126,200, 47));
 		
 		final JLabel status = new JLabel("You have "+remainingGuesses+" guesses remaining", SwingConstants.CENTER);
 		final JLabel wrong = new JLabel("Wrong guesses so far: "+wrongGuesses);
