@@ -35,8 +35,7 @@ public class HangmanWordChoice {
                 hangmanWordArrayList.add(word);
                 rawWords.add(currentLine);
                 //log(currentLine);
-            }
-        }
+            }        }
         catch (Exception e)
         {
             log(e);
@@ -125,7 +124,7 @@ public class HangmanWordChoice {
                 unguessedLetters.add(letter);
             }
         }
-        System.out.println(unguessedLetters);
+        //System.out.println(unguessedLetters);
         int bestGuess = Integer.MAX_VALUE;
         char bestLetter='!';
         for(String letter : unguessedLetters)
@@ -140,7 +139,7 @@ public class HangmanWordChoice {
         return bestLetter;
     }
 
-    ArrayList<HangmanWord> results = new ArrayList<>();
+    public ArrayList<HangmanWord> results = new ArrayList<>();
 
     //This function overloads the wordGuesses function to provide default values for the first call
     public void wordGuesses(ArrayList<String> wordArray)

@@ -12,6 +12,11 @@ public class HangmanWord {
         this.Word = Word;
     }
 
+    public String toString()
+    {
+        return this.Word;
+    }
+
     public void setWord(String word) {
         Word = word;
     }
