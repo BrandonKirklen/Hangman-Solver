@@ -151,7 +151,8 @@ public class HangmanWordChoice {
 
     public void wordGuesses(ArrayList<String> wordArray, int wrong, String letters)
     {
-        if ( wordArray.size() == 1) {
+        if ( wordArray.size() == 1)
+        {
             results.add(new HangmanWord(wordArray.get(0)));
             //Also add the number of wrong guesses and the string of guesses here
         }
