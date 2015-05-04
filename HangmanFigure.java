@@ -31,7 +31,7 @@ public class HangmanFigure extends JPanel {
 		
 		//set color to black
 		g2.setColor(Color.BLACK);
-		
+
 		// first guess
 		if(guesses > 0) {
 			//draws base
@@ -145,6 +145,10 @@ public class HangmanFigure extends JPanel {
 	
 	public void set() {
 		guesses++;
+		paintComponent(getGraphics());
+	}
+	public void set(int guess) {
+		guesses = guess;
 		paintComponent(getGraphics());
 	}
 	
