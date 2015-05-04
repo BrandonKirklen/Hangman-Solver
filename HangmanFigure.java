@@ -27,10 +27,12 @@ public class HangmanFigure extends JPanel {
 
 		//turn on anti-aliasing to clean up circles
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-				            RenderingHints.VALUE_ANTIALIAS_ON);
+				    RenderingHints.VALUE_ANTIALIAS_ON);
 		
 		//set color to black
 		g2.setColor(Color.BLACK);
+		//set background color to blue-green
+		g2.setBackground(new Color(0,200,120));
 
 		// first guess
 		if(guesses > 0) {
@@ -40,6 +42,9 @@ public class HangmanFigure extends JPanel {
 			//draws gallows
 			g2.drawRect(10, 10, 15, 299);
 			g2.drawRect(10, 10, 160, 15);
+			g2.rotate(-Math.PI/4);
+			g2.fillRect(-35,50,70,15);
+			g2.rotate(Math.PI/4);
 
 			//draws rope
 			g.drawLine(150, 25, 150, 70);
@@ -112,6 +117,9 @@ public class HangmanFigure extends JPanel {
 			//re-draws gallows
 			g2.drawRect(10, 10, 15, 299);
 			g2.drawRect(10, 10, 160, 15);
+			g2.rotate(-Math.PI/4);
+			g2.fillRect(-35,50,70,15);
+			g2.rotate(Math.PI/4);
 
 			//draws longer rope
 			g.drawLine(150, 25, 150, 85);
