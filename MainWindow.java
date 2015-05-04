@@ -10,15 +10,17 @@ public class MainWindow extends JFrame {
 	
 	private int remainingGuesses;
 	private int uniqueLettersRemaining;
+	private int diff;
 	private String wrongGuesses;
 	private String word;
 	private String visible;
 
 	public MainWindow() {
+		diff = 1;
 		final int startingGuesses = 10;
 		remainingGuesses = startingGuesses;
 		wrongGuesses = "";
-		word = getWord();
+		word = getWord(diff);
 		uniqueLettersRemaining = uniqueChars(word);
 
 		visible = "";
@@ -41,6 +43,7 @@ public class MainWindow extends JFrame {
 		////////////////////////////////MENU BAR STUFF/////////////////////////
 		JMenu file = new JMenu("File");
 		JMenu game = new JMenu("Game");
+		JMenu difficulty = new JMenu("Difficulty");
 
 		JMenuItem eMenuItem = new JMenuItem("Exit");
 		eMenuItem.setMnemonic(KeyEvent.VK_E);
@@ -58,14 +61,14 @@ public class MainWindow extends JFrame {
 		nMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				word = getWord();
+				word = getWord(diff);
 				remainingGuesses = startingGuesses;
 				wrongGuesses = "";
 				uniqueLettersRemaining = uniqueChars(word);
 				status.setText("You have " + remainingGuesses + " guesses remaining");
 				wrong.setText("Wrong guesses so far: " + wrongGuesses);
 				visible = "";
-				for(int i = 0; i < word.length(); ++i) {
+				for (int i = 0; i < word.length(); ++i) {
 					visible += "_ ";
 				}
 				visibleLabel.setText(visible);
@@ -85,12 +88,60 @@ public class MainWindow extends JFrame {
 			}
 		});
 
+		JMenuItem easyMenuItem = new JMenuItem("Easy");
+		JMenuItem mediumMenuItem = new JMenuItem("Medium");
+		mediumMenuItem.setEnabled(false);
+		JMenuItem hardMenuItem = new JMenuItem("Hard");
+
+		easyMenuItem.setMnemonic(KeyEvent.VK_E);
+		easyMenuItem.setToolTipText("Easy Difficulty");
+		easyMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				diff = 0;
+				easyMenuItem.setEnabled(false);
+				mediumMenuItem.setEnabled(true);
+				hardMenuItem.setEnabled(true);
+				nMenuItem.doClick();
+			}
+		});
+
+		mediumMenuItem.setMnemonic(KeyEvent.VK_M);
+		mediumMenuItem.setToolTipText("Medium Difficulty");
+		mediumMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				diff = 1;
+				easyMenuItem.setEnabled(true);
+				mediumMenuItem.setEnabled(false);
+				hardMenuItem.setEnabled(true);
+				nMenuItem.doClick();
+			}
+		});
+
+		hardMenuItem.setMnemonic(KeyEvent.VK_A);
+		hardMenuItem.setToolTipText("Hard Difficulty");
+		hardMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				diff = 2;
+				easyMenuItem.setEnabled(true);
+				mediumMenuItem.setEnabled(true);
+				hardMenuItem.setEnabled(false);
+				nMenuItem.doClick();
+			}
+		});
+
+		difficulty.add(easyMenuItem);
+		difficulty.add(mediumMenuItem);
+		difficulty.add(hardMenuItem);
 		file.add(nMenuItem);
 		file.add(eMenuItem);
 		game.add(hMenuItem);
 
 		menubar.add(file);
 		menubar.add(game);
+		menubar.add(difficulty);
 		///////////////////////////////////////////////////////////
 		
 		JPanel southPanel = new JPanel(new GridLayout(4, 1));
@@ -190,8 +241,17 @@ public class MainWindow extends JFrame {
 		return num;
 	}
 
-	private String getWord() { //make this work
-		return "cat";
+	private String getWord(int diff) { //make this work, 0=easy, 1=medium, 2=hard
+		switch(diff) {
+			case 0:
+				return "cat";
+			case 1:
+				return "tomato";
+			case 2:
+				return "jazzy";
+			default:
+				return "a";
+		}
 	}
 	
 	public static void main(String[] args) {
