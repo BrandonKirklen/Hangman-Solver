@@ -102,12 +102,12 @@ public class HangmanWordChoice {
     //Returns the number of words which don't contain a given letter
     public int priceOfGuess(char guess, ArrayList<String> wordArray)
     {
-        String guessLetter = Character.toString(guess)
+        String guessLetter = Character.toString(guess);
         int numWrongGuesses = 0; // number of words where guess is wrong
         for (String word : wordArray)
         {
             // If the word doesn't contain the guess, the guess is wrong
-            if (word.contains(guessLetter) == false) {
+            if ( !word.contains(guessLetter) ) {
                 numWrongGuesses++;
             }
         }
