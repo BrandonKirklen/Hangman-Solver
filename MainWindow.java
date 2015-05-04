@@ -14,12 +14,12 @@ public class MainWindow extends JFrame {
 	private String word;
 	private String visible;
 
-	public MainWindow(String toGuess) {
+	public MainWindow() {
 		final int startingGuesses = 10;
 		remainingGuesses = startingGuesses;
 		wrongGuesses = "";
-		word = toGuess;
-		uniqueLettersRemaining = uniqueChars(toGuess);
+		word = getWord();
+		uniqueLettersRemaining = uniqueChars(word);
 
 		visible = "";
 
@@ -52,6 +52,27 @@ public class MainWindow extends JFrame {
 			}
 		});
 
+		JMenuItem nMenuItem = new JMenuItem("New Game");
+		nMenuItem.setMnemonic(KeyEvent.VK_N);
+		nMenuItem.setToolTipText("Start A New Game");
+		nMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				word = getWord();
+				remainingGuesses = startingGuesses;
+				wrongGuesses = "";
+				uniqueLettersRemaining = uniqueChars(word);
+				status.setText("You have " + remainingGuesses + " guesses remaining");
+				wrong.setText("Wrong guesses so far: " + wrongGuesses);
+				visible = "";
+				for(int i = 0; i < word.length(); ++i) {
+					visible += "_ ";
+				}
+				visibleLabel.setText(visible);
+				hf.set(0);
+			}
+		});
+
 		JMenuItem hMenuItem = new JMenuItem("Hint");
 		hMenuItem.setMnemonic(KeyEvent.VK_H);
 		hMenuItem.setToolTipText("Get a Hint");
@@ -64,6 +85,7 @@ public class MainWindow extends JFrame {
 			}
 		});
 
+		file.add(nMenuItem);
 		file.add(eMenuItem);
 		game.add(hMenuItem);
 
@@ -124,8 +146,6 @@ public class MainWindow extends JFrame {
 							input.setEnabled(false);
 						}
 					} else { //they guessed right
-						uniqueLettersRemaining--;
-						System.out.println(uniqueLettersRemaining);
 
 						//String actualVisible = "";
 						//for(int i = 0; i < visible.length(); i+=2) {
@@ -137,20 +157,19 @@ public class MainWindow extends JFrame {
 						//	input.setEnabled(false);
 						//}
 
-						if(uniqueLettersRemaining == 0) {
+						if (--uniqueLettersRemaining == 0) {
 							status.setText("Congratulations, you have won!");
 							input.setEnabled(false);
 						}
 					}
-					
-				}
-				else {
+
+				} else {
 					System.out.println("Invalid input!");
 				}
 
 				input.setText("");
 			}
-			
+
 		});
 		
 		this.pack();
@@ -170,8 +189,12 @@ public class MainWindow extends JFrame {
 		}
 		return num;
 	}
+
+	private String getWord() { //make this work
+		return "cat";
+	}
 	
 	public static void main(String[] args) {
-		new MainWindow("cat");
+		new MainWindow();
 	}
 }
