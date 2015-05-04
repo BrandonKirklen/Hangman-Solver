@@ -16,8 +16,8 @@ public class HangmanWordChoice {
     public String pathToDictionary;
     final static Charset ENCODING = StandardCharsets.UTF_8;
     public Random pickANumber = new Random();
+    public ArrayList<HangmanWord> results = new ArrayList<>();
 
-    ArrayList<HangmanWord> hangmanWordArrayList = new ArrayList<>();
     ArrayList<String> rawWords = new ArrayList<>();
 
     //Reads words from a given file and puts them into various lists
@@ -30,8 +30,6 @@ public class HangmanWordChoice {
             String currentLine;
             while ((currentLine = reader.readLine()) != null)
             {
-                HangmanWord word = new HangmanWord(currentLine);
-                hangmanWordArrayList.add(word);
                 rawWords.add(currentLine);
             }
         }
@@ -51,18 +49,18 @@ public class HangmanWordChoice {
         float upperBound = (results.size()*(difficulty+1))/3;
         do
         {
-            i = pickANumber.nextInt(hangmanWordArrayList.size());
+            i = pickANumber.nextInt(results.size());
             loopCount++;
         }
-        while ( ( lowerBound < i && i < upperBound) && loopCount < hangmanWordArrayList.size() );
-        if (loopCount == hangmanWordArrayList.size())
+        while ( ( lowerBound < i && i < upperBound) && loopCount < results.size() );
+        if (loopCount == results.size())
         {
             log("Invalid Input: difficulty");
             return null;
         }
         else
         {
-            return hangmanWordArrayList.get(i).getWord();
+            return results.get(i).getWord();
         }
     }
 
@@ -136,8 +134,6 @@ public class HangmanWordChoice {
         }
         return bestLetter;
     }
-
-    public ArrayList<HangmanWord> results = new ArrayList<>();
 
     //This function overloads the wordGuesses function to provide default values for the first call
     public void wordGuesses(ArrayList<String> wordArray)
