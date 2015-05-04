@@ -1,8 +1,5 @@
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -36,7 +33,8 @@ public class MainWindow extends JFrame {
 		corePanel.setLayout(new BorderLayout());
 		//set background color
 		corePanel.setOpaque(true);
-		corePanel.setBackground(new Color(0,200,120));
+		corePanel.setBackground(new Color(0, 200, 120));
+		this.setBackground(new Color(0, 200, 120));
 		
 		final JLabel status = new JLabel("You have "+remainingGuesses+" guesses remaining", SwingConstants.CENTER);
 		final JLabel wrong = new JLabel("Wrong guesses so far: "+wrongGuesses);
@@ -100,13 +98,13 @@ public class MainWindow extends JFrame {
 				hf.set(startingGuesses - remainingGuesses);
 
 				String actualVisible = "";
-				for(int i = 0; i < visible.length(); i+=2) {
+				for (int i = 0; i < visible.length(); i += 2) {
 					actualVisible += visible.charAt(i);
 				}
 				ArrayList<Integer> indexes = new ArrayList<Integer>();
-				for(int i = 0; i < actualVisible.length(); i++) {
+				for (int i = 0; i < actualVisible.length(); i++) {
 					if (("_").equals(actualVisible.charAt(i) + "")) {
-					    indexes.add(i);
+						indexes.add(i);
 					}
 				}
 				Random rnd = new Random();
