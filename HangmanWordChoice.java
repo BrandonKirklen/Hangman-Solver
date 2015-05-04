@@ -20,6 +20,7 @@ public class HangmanWordChoice {
     public Random pickANumber = new Random();
 
     ArrayList<HangmanWord> hangmanWordArrayList = new ArrayList<>();
+    ArrayList<String> rawWords = new ArrayList<>();
 
     public HangmanWordChoice(String filepath)
     {
@@ -29,8 +30,9 @@ public class HangmanWordChoice {
             String currentLine;
             while ((currentLine = reader.readLine()) != null)
             {
-                HangmanWord word = new HangmanWord(currentLine, wordDifficulty(currentLine));
+                HangmanWord word = new HangmanWord(currentLine);
                 hangmanWordArrayList.add(word);
+                rawWords.add(currentLine);
                 //log(currentLine);
             }
         }
@@ -44,17 +46,19 @@ public class HangmanWordChoice {
     {
         int i;
         int loopCount=0;
-        do {
+        do
+        {
             i = pickANumber.nextInt(hangmanWordArrayList.size());
             loopCount++;
         }
-        while ( hangmanWordArrayList.get(i).getDifficulty() != difficulty && loopCount < hangmanWordArrayList.size());
+        while ( loopCount < hangmanWordArrayList.size());
         if (loopCount == hangmanWordArrayList.size())
         {
             log("Invalid Input: difficulty");
             return null;
         }
-        else {
+        else
+        {
             return hangmanWordArrayList.get(i).getWord();
         }
     }
@@ -69,38 +73,41 @@ public class HangmanWordChoice {
         System.out.println(String.valueOf(error));
     }
 
-    public Map sortedList(char guess, ArrayList<HangmanWord> wordArray)
+    public ArrayList<HashMap> sortedList(char guess, ArrayList<String> wordArray)
     {
 
-        Map<Integer, ArrayList<String>> wordListContainingGuess = new HashMap<>();
+        ArrayList<HashMap> results = new ArrayList<>();
+        HashMap<Integer, ArrayList<String>> wordListContainingGuess;
         int sum=0;
-        for( int i=0; i < wordArray.size(); i++)
+        for(String word : wordArray)
         {
-            for (int j=0; j < wordArray.get(i).getWord().length(); j++)
+            wordListContainingGuess = new HashMap<>();
+            for ( int j=0; j < word.length(); j++)
             {
-                if ( wordArray.get(i).getWord().charAt(j) == guess)
+                if ( word.charAt(j) == guess )
                 {
                     sum += 1 << j;
                 }
             }
-            if (wordListContainingGuess.get(sum) == null)
+            if ( wordListContainingGuess.get(sum) == null )
             {
                 wordListContainingGuess.put(sum, new ArrayList<>());
             }
-            wordListContainingGuess.get(sum).add(wordArray.get(i).getWord());
+            wordListContainingGuess.get(sum).add(word);
+            results.add(wordListContainingGuess);
             sum=0;
         }
-        return wordListContainingGuess;
+        return results;
     }
 
-    public int priceOfGuess(char guess, ArrayList<HangmanWord> wordArray)
+    public int priceOfGuess(char guess, ArrayList<String> wordArray)
     {
         int numberWithoutGuess=0;
-        for ( int i=0; i < wordArray.size(); i++)
+        for (String word : wordArray)
         {
-            for (int j=0; j < wordArray.get(i).getWord().length(); j++)
+            for (int j=0; j < word.length(); j++)
             {
-                if( wordArray.get(i).getWord().charAt(j) == guess )
+                if( word.charAt(j) == guess )
                 {
                     numberWithoutGuess++;
                     j++;
@@ -109,17 +116,62 @@ public class HangmanWordChoice {
         }
         return wordArray.size()-numberWithoutGuess;
     }
-    int wrong=0;
-    public ArrayList wordGuesses(ArrayList<HangmanWord> wordArray, String letters)
+
+    public char bestGuess(String letters, ArrayList<String> wordArray)
     {
+        String allLetters = "abcdefghijklmnopqrstuvwxyz";
+        String[] currentLetters = allLetters.split("");
+        String[] lettersSplit = letters.split("");
+        ArrayList<String> symmetricDifference = new ArrayList<>();
+        for(String letter : currentLetters)
+        {
+            if ( !letters.contains(letter) )
+            {
+                symmetricDifference.add(letter);
+            }
+        }
+        HashMap<Integer, Character> costedGuess = new HashMap<>();
+        int bestGuess = Integer.MAX_VALUE;
+        char bestLetter='!';
+        for(String letter : symmetricDifference)
+        {
+            int currentPrice = priceOfGuess(letter.charAt(0), wordArray);
+            if ( currentPrice < bestGuess )
+            {
+                bestGuess = currentPrice;
+                bestLetter = letter.charAt(0);
+            }
+        }
+        return bestLetter;
+    }
+
+    ArrayList<HangmanWord> results = new ArrayList<>();
+
+    public void wordGuesses(ArrayList<String> wordArray)
+    {
+        wordGuesses(wordArray, 0, "");
+    }
+
+    public void wordGuesses(ArrayList<String> wordArray, int wrong, String letters)
+    {
+
         if ( wordArray.size() == 1)
         {
-            return wordArray;
+            results.add(new HangmanWord(wordArray.get(0)));
         }
         else
         {
-
+            char bestGuess = bestGuess(letters, wordArray);
+            //System.out.println(bestGuess);
+            ArrayList bestList = sortedList(bestGuess, wordArray);
+            for(int i=0; i < bestList.size(); i++)
+            {
+                Map item = (Map) bestList.get(i);
+                ArrayList<String> words = new ArrayList<>();
+                words.add((String) ((ArrayList) item.values().toArray()[0]).get(0));
+                int pattern = (int) item.keySet().toArray()[0];
+                wordGuesses(words, wrong + ((pattern == 0) ? 1 : 0), letters);
+            }
         }
-        return wordArray;
     }
 }
