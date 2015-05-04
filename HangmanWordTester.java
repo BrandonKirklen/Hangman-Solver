@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Brandon Kirklen on 5/2/2015.
@@ -20,6 +21,7 @@ public class HangmanWordTester {
         test.add("zebra");
         currentDictionary.wordGuesses(currentDictionary.rawWords);
         System.out.println(currentDictionary.results);
+        Collections.sort(currentDictionary.results);
         for (HangmanWord currentWord : currentDictionary.results)
         {
             System.out.println("[" + currentWord.getWrongGuesses().length() + ", " + currentWord.getGuessesNeeded() + ", "

@@ -163,7 +163,6 @@ public class HangmanWordChoice {
         {
             char bestGuess = bestGuess(letters, wordArray);
             letters += bestGuess;
-            System.out.println(bestGuess);
             HashMap<Integer, ArrayList<String>> bestList = sortedList(bestGuess, wordArray);
             for ( Map.Entry<Integer, ArrayList<String>> entry : bestList.entrySet() )
             {
