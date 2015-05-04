@@ -4,8 +4,6 @@
  */
 
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -27,31 +25,36 @@ public class HangmanWordChoice {
     {
         pathToDictionary = filepath;
         Path path = Paths.get(pathToDictionary);
-        try (BufferedReader reader =  Files.newBufferedReader(path, ENCODING)){
+        try (BufferedReader reader =  Files.newBufferedReader(path, ENCODING))
+        {
             String currentLine;
             while ((currentLine = reader.readLine()) != null)
             {
                 HangmanWord word = new HangmanWord(currentLine);
                 hangmanWordArrayList.add(word);
                 rawWords.add(currentLine);
-                //log(currentLine);
-            }        }
+            }
+        }
         catch (Exception e)
         {
             log(e);
         }
+        wordGuesses(rawWords);
+        Collections.sort(results);
     }
 
     public String newWord(int difficulty)
     {
         int i;
         int loopCount=0;
+        float lowerBound = (results.size()*(difficulty))/3;
+        float upperBound = (results.size()*(difficulty+1))/3;
         do
         {
             i = pickANumber.nextInt(hangmanWordArrayList.size());
             loopCount++;
         }
-        while ( loopCount < hangmanWordArrayList.size());
+        while ( ( lowerBound < i && i < upperBound) && loopCount < hangmanWordArrayList.size() );
         if (loopCount == hangmanWordArrayList.size())
         {
             log("Invalid Input: difficulty");
@@ -61,11 +64,6 @@ public class HangmanWordChoice {
         {
             return hangmanWordArrayList.get(i).getWord();
         }
-    }
-
-    public int wordDifficulty(String testWord)
-    {
-        return testWord.length();
     }
 
     //Used for debugging

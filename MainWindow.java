@@ -14,13 +14,15 @@ public class MainWindow extends JFrame {
 	private String word;
 	private String visible;
 
+	HangmanWordChoice currentDictionary = new HangmanWordChoice("wordlist.txt");
+
 	public MainWindow() {
 		super("Hangman!"); //give frame a title
 		diff = 1;
 		final int startingGuesses = 10;
 		remainingGuesses = startingGuesses;
 		wrongGuesses = "";
-		word = getWord(diff);
+		word = currentDictionary.newWord(diff);
 		uniqueLettersRemaining = uniqueChars(word);
 
 		visible = "";
@@ -67,7 +69,7 @@ public class MainWindow extends JFrame {
 		nMenuItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				word = getWord(diff);
+				word = currentDictionary.newWord(diff);
 				remainingGuesses = startingGuesses;
 				wrongGuesses = "";
 				uniqueLettersRemaining = uniqueChars(word);
@@ -101,7 +103,7 @@ public class MainWindow extends JFrame {
 				for (int i = 0; i < visible.length(); i += 2) {
 					actualVisible += visible.charAt(i);
 				}
-				ArrayList<Integer> indexes = new ArrayList<Integer>();
+				ArrayList<Integer> indexes = new ArrayList<>();
 				for (int i = 0; i < actualVisible.length(); i++) {
 					if (("_").equals(actualVisible.charAt(i) + "")) {
 						indexes.add(i);
@@ -291,19 +293,6 @@ public class MainWindow extends JFrame {
 			}
 		}
 		return num;
-	}
-
-	private String getWord(int diff) { //make this work, 0=easy, 1=medium, 2=hard
-		switch(diff) {
-			case 0:
-				return "cat";
-			case 1:
-				return "tomato";
-			case 2:
-				return "jazzy";
-			default:
-				return "a";
-		}
 	}
 	
 	public static void main(String[] args) {

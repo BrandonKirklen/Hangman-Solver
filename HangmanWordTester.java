@@ -20,12 +20,15 @@ public class HangmanWordTester {
         test.add("horse");
         test.add("zebra");
         currentDictionary.wordGuesses(currentDictionary.rawWords);
-        System.out.println(currentDictionary.results);
+        //System.out.println(currentDictionary.results);
         Collections.sort(currentDictionary.results);
-        for (HangmanWord currentWord : currentDictionary.results)
+        /*for (HangmanWord currentWord : currentDictionary.results)
         {
             System.out.println("[" + currentWord.getWrongGuesses().length() + ", " + currentWord.getGuessesNeeded() + ", "
             + currentWord.getWord() + ", " + currentWord.getWrongGuesses() + "]");
-        }
+        }*/
+        System.out.println("Easy word: " + currentDictionary.newWord(0));
+        System.out.println("Med  word: " + currentDictionary.newWord(1));
+        System.out.println("Hard word: " + currentDictionary.newWord(2));
     }
 }
