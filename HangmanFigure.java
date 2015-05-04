@@ -132,7 +132,7 @@ public class HangmanFigure extends JPanel {
 			g2.drawLine(140,107,145,99);				//left eye
 			g2.drawLine(155,99,160,107);				//right eye
 			g2.drawLine(155,107,160,99);				//right eye
-			g2.drawArc(140, 120, 21, 8, -180, -180);	        //mouth
+			g2.drawArc(140, 120, 21, 8, -180, -180);	//mouth
 			
 			//re-draws body
 			g2.drawLine(150, 135, 150, 215);
@@ -155,6 +155,7 @@ public class HangmanFigure extends JPanel {
 		guesses++;
 		paintComponent(getGraphics());
 	}
+
 	public void set(int guess) {
 		guesses = guess;
 		paintComponent(getGraphics());
