@@ -150,10 +150,15 @@ public class HangmanWordChoice {
 
     public void wordGuesses(ArrayList<String> wordArray, int wrong, String letters)
     {
+        /*When recursion finished, or only one word possible word left in the possible list, adds that word to the
+        list of HangmanWords
+        */
         if ( wordArray.size() == 1)
         {
+            //Sets all the various parameters associated with each word.
             results.add(new HangmanWord(wordArray.get(0)));
-            //Also add the number of wrong guesses and the string of guesses here
+            results.get(results.size()-1).setWrongGuesses(letters);
+            results.get(results.size()-1).setGuessesNeeded(wrong);
         }
         else
         {
