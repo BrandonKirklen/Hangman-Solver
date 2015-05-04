@@ -96,7 +96,11 @@ public class MainWindow extends JFrame {
 				if (remainingGuesses <= 3) {
 					hMenuItem.setEnabled(false);
 				}
-				status.setText("You have " + remainingGuesses + " guesses remaining");
+				if (remainingGuesses > 1) {
+					status.setText("You have " + remainingGuesses + " guesses remaining");
+				} else {
+					status.setText("You have " + remainingGuesses + " guess remaining");
+				}
 				hf.set(startingGuesses - remainingGuesses);
 
 				String actualVisible = "";
@@ -239,44 +243,52 @@ public class MainWindow extends JFrame {
 							hMenuItem.setEnabled(false);
 						}
 
-						if (remainingGuesses >= 0) { //reduce 1 from guesses, if they didn't lose do this
-							status.setText("You have " + remainingGuesses + " guesses remaining");
+						hf.set(startingGuesses - remainingGuesses); //update hangman
+
+						if (remainingGuesses > 0) { //reduce 1 from guesses, if they didn't lose do this
+
+							if (remainingGuesses > 1) {
+								status.setText("You have " + remainingGuesses + " guesses remaining");
+							} else {
+								status.setText("You have " + remainingGuesses + " guess remaining");
+							}
+
 							wrongGuesses += text + " ";
 							wrong.setText("Wrong guesses so far: " + wrongGuesses);
-							hf.set(startingGuesses - remainingGuesses); //add a limb to the hangman
 						} else { //if they lost do this
 							status.setText("You lost: the word was " + word);
 							input.setEnabled(false);
 						}
 					} else { //they guessed right
 
-						//String actualVisible = "";
-						//for(int i = 0; i < visible.length(); i+=2) {
-						//	actualVisible += visible.charAt(i);
-						//}
+						String actualVisible = "";
+						for (int i = 0; i < visible.length(); i += 2) {
+							actualVisible += visible.charAt(i);
+						}
 
-						//if(actualVisible.equals(word)) {
-						//	status.setText("Congratulations, you have won!");
-						//	input.setEnabled(false);
-						//}
-
-						if (--uniqueLettersRemaining == 0) {
+						if (actualVisible.equals(word)) {
 							status.setText("Congratulations, you have won!");
 							input.setEnabled(false);
-						} else if (uniqueLettersRemaining <= 2) {
+						}
+
+						if (--uniqueLettersRemaining <= 2) {
 							hMenuItem.setEnabled(false);
 						}
 					}
 
 				} else {
-					System.out.println("Invalid input!");
+					if (remainingGuesses > 1) {
+						status.setText("Invalid input! " + remainingGuesses + " guesses remaining");
+					} else {
+						status.setText("Invalid input! " + remainingGuesses + " guess remaining");
+					}
 				}
 
 				input.setText("");
 			}
 
 		});
-		
+
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
