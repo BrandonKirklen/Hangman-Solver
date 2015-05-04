@@ -17,10 +17,11 @@ public class HangmanWordChoice {
     final static Charset ENCODING = StandardCharsets.UTF_8;
     public Random pickANumber = new Random();
     public ArrayList<HangmanWord> results = new ArrayList<>();
+    private ArrayList<String> rawWords = new ArrayList<>();
 
-    ArrayList<String> rawWords = new ArrayList<>();
 
-    //Reads words from a given file and puts them into various lists
+    //Reads words from a given file and puts them into rawWords list
+    //given file must not have duplicates and each word must be on a new line
     public HangmanWordChoice(String filepath)
     {
         pathToDictionary = filepath;
@@ -37,22 +38,25 @@ public class HangmanWordChoice {
         {
             log(e);
         }
-        wordGuesses(rawWords);
-        Collections.sort(results);
+        wordGuesses(rawWords); //Creates the results arraylist of type HangmanWord
+        Collections.sort(results); //Uses built in comparer methods in HangmanWord to sort the results list
     }
 
+    //Returns a random word from results in a section of the list. This is currently hardcoded with 3 sections
     public String newWord(int difficulty)
     {
         int i;
         int loopCount=0;
-        float lowerBound = (results.size()*(difficulty))/3;
-        float upperBound = (results.size()*(difficulty+1))/3;
+        int numberOfDifficulties=3;
+        float lowerBound = (results.size()*(difficulty))/numberOfDifficulties;
+        float upperBound = (results.size()*(difficulty+1))/numberOfDifficulties;
         do
         {
             i = pickANumber.nextInt(results.size());
             loopCount++;
         }
         while ( ( lowerBound < i && i < upperBound) && loopCount < results.size() );
+        //Breakcase if there is no possible return value.
         if (loopCount == results.size())
         {
             log("Invalid Input: difficulty");
@@ -67,10 +71,10 @@ public class HangmanWordChoice {
     //Used for debugging
     private static void log(Object error)
     {
-        System.out.println(String.valueOf(error));
+        //System.out.println(String.valueOf(error));
     }
 
-    public HashMap<Integer, ArrayList<String>> sortedList(char guess, ArrayList<String> wordArray)
+    private HashMap<Integer, ArrayList<String>> sortedList(char guess, ArrayList<String> wordArray)
     {
         /*  Apply the single letter 'guess' to the sequence 'wordArray' and return
         a dictionary mapping the pattern of occurrences of 'wordArray' in a
@@ -88,7 +92,12 @@ public class HangmanWordChoice {
             {
                 if ( word.charAt(j) == guess )
                 {
-                    sum += 1 << j;
+                    sum += 1 << j; /* Uses bitwise operator to make a unique key for a given configuration of a guessed
+                                    * letter.
+                                    *
+                                    * >>> for 'e' in "star" sum = 0
+                                    * >>> for 'e' in "even" sum = 5
+                                    * */
                 }
             }
             // Create the word array if it does not already exist for this given key
@@ -102,7 +111,7 @@ public class HangmanWordChoice {
         return wordListContainingGuess;
     }
     //Returns the number of words which don't contain a given letter
-    public int priceOfGuess(char guess, ArrayList<String> wordArray)
+    private int priceOfGuess(char guess, ArrayList<String> wordArray)
     {
         /* Return the cost of a guess, namely the number of words that don't
         contain the guess.
@@ -125,10 +134,11 @@ public class HangmanWordChoice {
         return numWrongGuesses;
     }
 
-    public char bestGuess(String guessedLetters, ArrayList<String> wordArray)
+    private char bestGuess(String guessedLetters, ArrayList<String> wordArray)
     {
-        String[] alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+        String[] alphabet = "abcdefghijklmnopqrstuvwxyz".split(""); //Every possible letter in word
         ArrayList<String> unguessedLetters = new ArrayList<>();
+        //Creates a symmetricDifference to find all letters that haven't been guessed yet
         for(String letter : alphabet )
         {
             if ( !guessedLetters.contains(letter) )
@@ -136,28 +146,41 @@ public class HangmanWordChoice {
                 unguessedLetters.add(letter);
             }
         }
-        //System.out.println(unguessedLetters);
+        // Outputs an array of all the letters which are left to be guessed
+        log(unguessedLetters);
+        // Starts the bestGuess at the lowest possible value
         int bestGuess = Integer.MAX_VALUE;
+        // Some character that wouldn't appear in the words in normal use
         char bestLetter='!';
+        //Find the letter which eliminates the most words by finding the letter which has the least wrong guesses
         for(String letter : unguessedLetters)
         {
+            // Records what price we are paying currently
             int currentPrice = priceOfGuess(letter.charAt(0), wordArray);
+            // For each letter, check if we have a lower price.
             if ( currentPrice < bestGuess )
             {
+                // Updates what the lowest cost is
                 bestGuess = currentPrice;
+                // Keeps track of what letter has the lowest cost
                 bestLetter = letter.charAt(0);
             }
         }
+        //Returns the letter which has the fewest words that it doesn't appear in
         return bestLetter;
     }
 
     //This function overloads the wordGuesses function to provide default values for the first call
-    public void wordGuesses(ArrayList<String> wordArray)
+    private void wordGuesses(ArrayList<String> wordArray)
     {
         wordGuesses(wordArray, 0, "");
     }
 
-    public void wordGuesses(ArrayList<String> wordArray, int wrong, String letters)
+    /* Main recursing function which takes in a list of words and updates results arraylist of type HangmanWord
+     * and finds idea sequence of guesses based on the whole list of words to find the total number of guesses and
+     * wrong guesses needed to find a given word.
+     */
+    private void wordGuesses(ArrayList<String> wordArray, int wrong, String letters)
     {
         /*When recursion finished, or only one word possible word left in the possible list, adds that word to the
         list of HangmanWords
@@ -171,13 +194,28 @@ public class HangmanWordChoice {
         }
         else
         {
+            // Calculates the best guess for the current words list for each letter that hasn’t been used yet
             char bestGuess = bestGuess(letters, wordArray);
+            // This records which letter we're guessing
             letters += bestGuess;
+            /* Uses the best guess method to get a bestguess char which then is passed to sorted list
+             * to make a hashmap of all words using that best guess */
             HashMap<Integer, ArrayList<String>> bestList = sortedList(bestGuess, wordArray);
+            // For each set of words which have a given character in the same positions inside bestList run this
             for ( Map.Entry<Integer, ArrayList<String>> entry : bestList.entrySet() )
             {
+                /* If the key of what we're recursing on is equal to 0 then we'll want to increase the number of wrong
+                 * guesses. This is because a 0 in the key value means that for a given guess, there were no words in
+                 * the current set of words which matched the previous set.
+                 */
                 Integer pattern = entry.getKey();
+                /* The words which we're going to pass into the function again, are all the words which are at the
+                 * current key value.
+                 */
                 ArrayList<String> words = entry.getValue();
+                /* Main recurse call which takes an increasingly small set of words until they have all been added
+                 * to the results file.
+                 */
                 wordGuesses(words, wrong + ((pattern == 0) ? 1 : 0), letters);
             }
         }

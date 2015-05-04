@@ -19,7 +19,7 @@ public class HangmanWordTester {
         test.add("cock");
         test.add("horse");
         test.add("zebra");
-        currentDictionary.wordGuesses(currentDictionary.rawWords);
+        //currentDictionary.wordGuesses(currentDictionary.rawWords);
         //System.out.println(currentDictionary.results);
         Collections.sort(currentDictionary.results);
         /*for (HangmanWord currentWord : currentDictionary.results)
