@@ -89,10 +89,12 @@ public class HangmanWordChoice {
                     sum += 1 << j;
                 }
             }
+            // Create the word array if it does not already exist for this given key
             if ( wordListContainingGuess.get(sum) == null )
             {
                 wordListContainingGuess.put(sum, new ArrayList<>());
             }
+            // Add our word to the word array at this key
             wordListContainingGuess.get(sum).add(word);
         }
         return wordListContainingGuess;
@@ -100,19 +102,16 @@ public class HangmanWordChoice {
     //Returns the number of words which don't contain a given letter
     public int priceOfGuess(char guess, ArrayList<String> wordArray)
     {
-        int numberWithoutGuess=0;
+        String guessLetter = Character.toString(guess)
+        int numWrongGuesses = 0; // number of words where guess is wrong
         for (String word : wordArray)
         {
-            for (int j=0; j < word.length(); j++)
-            {
-                if( word.charAt(j) == guess )
-                {
-                    numberWithoutGuess++;
-                    j++;
-                }
+            // If the word doesn't contain the guess, the guess is wrong
+            if (word.contains(guessLetter) == false) {
+                numWrongGuesses++;
             }
         }
-        return wordArray.size()-numberWithoutGuess;
+        return numWrongGuesses;
     }
 
     public char bestGuess(String guessedLetters, ArrayList<String> wordArray)
