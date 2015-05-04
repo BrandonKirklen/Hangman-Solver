@@ -22,6 +22,7 @@ public class HangmanWordChoice {
     ArrayList<HangmanWord> hangmanWordArrayList = new ArrayList<>();
     ArrayList<String> rawWords = new ArrayList<>();
 
+    //Reads words from a given file and puts them into various lists
     public HangmanWordChoice(String filepath)
     {
         pathToDictionary = filepath;
@@ -68,20 +69,19 @@ public class HangmanWordChoice {
         return testWord.length();
     }
 
+    //Used for debugging
     private static void log(Object error)
     {
         System.out.println(String.valueOf(error));
     }
 
-    public ArrayList<HashMap> sortedList(char guess, ArrayList<String> wordArray)
+    public HashMap<Integer, ArrayList<String>> sortedList(char guess, ArrayList<String> wordArray)
     {
 
-        ArrayList<HashMap> results = new ArrayList<>();
-        HashMap<Integer, ArrayList<String>> wordListContainingGuess;
-        int sum=0;
+        HashMap<Integer, ArrayList<String>> wordListContainingGuess = new HashMap<>();
         for(String word : wordArray)
         {
-            wordListContainingGuess = new HashMap<>();
+            int sum=0;
             for ( int j=0; j < word.length(); j++)
             {
                 if ( word.charAt(j) == guess )
@@ -94,12 +94,10 @@ public class HangmanWordChoice {
                 wordListContainingGuess.put(sum, new ArrayList<>());
             }
             wordListContainingGuess.get(sum).add(word);
-            results.add(wordListContainingGuess);
-            sum=0;
         }
-        return results;
+        return wordListContainingGuess;
     }
-
+    //Returns the number of words which don't contain a given letter
     public int priceOfGuess(char guess, ArrayList<String> wordArray)
     {
         int numberWithoutGuess=0;
@@ -117,23 +115,21 @@ public class HangmanWordChoice {
         return wordArray.size()-numberWithoutGuess;
     }
 
-    public char bestGuess(String letters, ArrayList<String> wordArray)
+    public char bestGuess(String guessedLetters, ArrayList<String> wordArray)
     {
-        String allLetters = "abcdefghijklmnopqrstuvwxyz";
-        String[] currentLetters = allLetters.split("");
-        String[] lettersSplit = letters.split("");
-        ArrayList<String> symmetricDifference = new ArrayList<>();
-        for(String letter : currentLetters)
+        String[] alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+        ArrayList<String> unguessedLetters = new ArrayList<>();
+        for(String letter : alphabet )
         {
-            if ( !letters.contains(letter) )
+            if ( !guessedLetters.contains(letter) )
             {
-                symmetricDifference.add(letter);
+                unguessedLetters.add(letter);
             }
         }
-        HashMap<Integer, Character> costedGuess = new HashMap<>();
+        System.out.println(unguessedLetters);
         int bestGuess = Integer.MAX_VALUE;
         char bestLetter='!';
-        for(String letter : symmetricDifference)
+        for(String letter : unguessedLetters)
         {
             int currentPrice = priceOfGuess(letter.charAt(0), wordArray);
             if ( currentPrice < bestGuess )
@@ -147,6 +143,7 @@ public class HangmanWordChoice {
 
     ArrayList<HangmanWord> results = new ArrayList<>();
 
+    //This function overloads the wordGuesses function to provide default values for the first call
     public void wordGuesses(ArrayList<String> wordArray)
     {
         wordGuesses(wordArray, 0, "");
@@ -154,22 +151,20 @@ public class HangmanWordChoice {
 
     public void wordGuesses(ArrayList<String> wordArray, int wrong, String letters)
     {
-
-        if ( wordArray.size() == 1)
-        {
+        if ( wordArray.size() == 1) {
             results.add(new HangmanWord(wordArray.get(0)));
+            //Also add the number of wrong guesses and the string of guesses here
         }
         else
         {
             char bestGuess = bestGuess(letters, wordArray);
-            //System.out.println(bestGuess);
-            ArrayList bestList = sortedList(bestGuess, wordArray);
-            for(int i=0; i < bestList.size(); i++)
+            letters += bestGuess;
+            System.out.println(bestGuess);
+            HashMap<Integer, ArrayList<String>> bestList = sortedList(bestGuess, wordArray);
+            for ( Map.Entry<Integer, ArrayList<String>> entry : bestList.entrySet() )
             {
-                Map item = (Map) bestList.get(i);
-                ArrayList<String> words = new ArrayList<>();
-                words.add((String) ((ArrayList) item.values().toArray()[0]).get(0));
-                int pattern = (int) item.keySet().toArray()[0];
+                Integer pattern = entry.getKey();
+                ArrayList<String> words = entry.getValue();
                 wordGuesses(words, wrong + ((pattern == 0) ? 1 : 0), letters);
             }
         }
