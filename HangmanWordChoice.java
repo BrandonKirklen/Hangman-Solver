@@ -72,7 +72,14 @@ public class HangmanWordChoice {
 
     public HashMap<Integer, ArrayList<String>> sortedList(char guess, ArrayList<String> wordArray)
     {
+        /*  Apply the single letter 'guess' to the sequence 'wordArray' and return
+        a dictionary mapping the pattern of occurrences of 'wordArray' in a
+        word to the list of words with that pattern.
 
+        >>> words = 'deed even eyes mews peep star'.split("")
+        >>> sortedlist('e', words).items
+        [(0, ['star']), (2, ['mews']), (5, ['even', 'eyes']), (6, ['deed', 'peep'])]
+        */
         HashMap<Integer, ArrayList<String>> wordListContainingGuess = new HashMap<>();
         for(String word : wordArray)
         {
@@ -97,6 +104,15 @@ public class HangmanWordChoice {
     //Returns the number of words which don't contain a given letter
     public int priceOfGuess(char guess, ArrayList<String> wordArray)
     {
+        /* Return the cost of a guess, namely the number of words that don't
+        contain the guess.
+
+        >>> words = 'deed even eyes mews peep star'.split()
+        >>> guess_cost('e', words)
+        1
+        >>> guess_cost('s', words)
+        3
+        */
         String guessLetter = Character.toString(guess);
         int numWrongGuesses = 0; // number of words where guess is wrong
         for (String word : wordArray)
